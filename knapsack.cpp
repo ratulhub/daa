@@ -1,36 +1,59 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include<bits/stdc++.h>
 using namespace std;
 
-int knapsack(int W, const vector<int>& wt, const vector<int>& val, int n) {
-    vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
+int main()
+{
+    int n;
 
-    for (int i = 1; i <= n; i++) {
-        for (int w = 0; w <= W; w++) {
+    cout << "Enter number of items: ";
+    cin >> n;
 
-            dp[i][w] = dp[i - 1][w];
+    int weight[n], value[n];
 
-            if (wt[i - 1] <= w) {
-                dp[i][w] = max(
-                    dp[i][w],
-                    val[i - 1] + dp[i - 1][w - wt[i - 1]]
+    cout << "Enter weights:\n";
+
+    for(int i = 0; i < n; i++)
+    {
+        cin >> weight[i];
+    }
+
+    cout << "Enter values:\n";
+
+    for(int i = 0; i < n; i++)
+    {
+        cin >> value[i];
+    }
+
+    int capacity;
+
+    cout << "Enter bag capacity: ";
+    cin >> capacity;
+
+    int dp[n + 1][capacity + 1];
+
+    for(int i = 0; i <= n; i++)
+    {
+        for(int j = 0; j <= capacity; j++)
+        {
+            if(i == 0 || j == 0)
+            {
+                dp[i][j] = 0;
+            }
+            else if(weight[i - 1] <= j)
+            {
+                dp[i][j] = max(
+                    value[i - 1] + dp[i - 1][j - weight[i - 1]],
+                    dp[i - 1][j]
                 );
+            }
+            else
+            {
+                dp[i][j] = dp[i - 1][j];
             }
         }
     }
 
-    return dp[n][W];
-}
-
-int main() {
-    vector<int> wt = {2, 3, 4, 5};
-    vector<int> val = {3, 4, 5, 6};
-    int W = 5;  
-    int n = wt.size();
-
-    cout << "Maximum value in Knapsack = "
-         << knapsack(W, wt, val, n) << endl;
+    cout << "Maximum Value = " << dp[n][capacity];
 
     return 0;
 }
